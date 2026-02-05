@@ -77,4 +77,4 @@ class MetodosAux {
             dniT=sc.nextLine().toUpperCase();
         }while (!validarDNI(dniT));
     */
- }
+  }
