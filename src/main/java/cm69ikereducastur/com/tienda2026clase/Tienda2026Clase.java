@@ -4,7 +4,6 @@
 
 package cm69ikereducastur.com.tienda2026clase;
 
-import static cm69ikereducastur.com.tienda2026clase.MetodosAux.validarDNI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -450,7 +449,8 @@ private void listadoPedido(){
         do {            
            System.out.println("DNI CLIENTE:");
         dni = sc.next(); 
-        } while (!validarDNI(dni));
+        } while (!MetodosAux.validarDNI(dni)); /*En el examen habiamos puesto "!validarDNI(dni)", 
+        pero habia que poner "!MetodosAux.validarDNI(dni)".*/
         
         int pos = buscaCliente(dni);
         
@@ -538,5 +538,104 @@ private void listadoPedido(){
         System.out.println("LISTADO CLIENTES SIN PEDIDOS:");
         sinPedidos.stream().forEach(sp->System.out.println(sp));
     }
-//</editor-fold>
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="CORRECCIÓN DEL EXAMEN">
+    public void unoCorregido(){
+        String[] secciones = {"PERIFERICOS","ALMACENAMIENTO","IMPRESORES","MONITORES"};
+        System.out.println("SECCION A LISTAR:");
+        String sec = sc.next();
+        //System.out.println("ARTICULOS DE LA SECCION: " + secciones[sec]);
+        
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith(sec)) {
+                System.out.println(a);
+            }
+        }
+        /*De otra manera (en programación funcional. API de Streams):
+        articulos.values().stream().filter(a->a.getIdArticulo().startsWith(sec))
+        .forEach(a->System.out.println(a));
+        */
+    }
+    
+    public void dosCorregido(){
+        String[] secciones = {"PERIFERICOS","ALMACENAMIENTO","IMPRESORES","MONITORES"};
+        for (int i = 1; i <= 4; i++) {
+            System.out.println(secciones[i]);
+            String prefijo = Integer.toString(i);
+                /*if () {
+                System.out.println();
+            }*/
+        }
+        
+    }
+    
+    public void tresCorregido(){
+        String dni;
+        do {            
+           System.out.println("DNI CLIENTE:");
+        dni = sc.next(); 
+        } while (!MetodosAux.validarDNI(dni));
+        
+        if (clientes.containsKey(dni)) {
+            float total = 0;
+            System.out.println("PEDIDOS DEL CLIENTE: " + clientes.get(dni).getNombre());
+            for (Pedido p : pedidos) {
+                if (p.getClientePedido().getIDcliente().equals(dni)) {
+                    System.out.println(p + "\tTOTAL: " /*+ totalPedidoExam(p)*/);
+                    //total += totalPedidoExam(p);
+                }
+            }
+            System.out.println("\nTOTAL GASTADO: " + total);
+        } else {
+            System.out.println("ESE CLIENTE NO EXISTE");
+        }
+    }
+    
+    /*public double totalPedidoExam (p){
+        return totalPedido;
+    }*/
+    
+    public void cuatroCorregido(){ //Es el más difícil
+        System.out.println("LISTADO ARTICULOS - UNIDADES: \n");
+        //articulos.values().stream().sorted(Comparator.comparing((Articulo a) -> unidadesVendidas(Articulo) a)
+    }
+    /**
+     * @param a es un artículo determinado
+     * @param c es cada unidad que se sumará
+     * @return c, que devolverá la cantidad de unidades de cada artículo
+     * Por cada bucle de pedido, revisa la cestaCompra para ver si coinciden los IDs
+     * y si hay, totalizas las unidades.
+     */
+    private int unidadesVendidas(Articulo a){
+        int c = 0;
+        for (Pedido p: pedidos) {
+            for (LineaPedido lp: p.getCestaCompra()) {
+                if (lp.getIdArticulo().equals(a.getIdArticulo())) {
+                    c += lp.getUnidades();
+                }
+            }
+        }
+        return c;
+    }
+    
+    
+    public void cincoCorregido(){
+        ArrayList <Cliente> sinPedidos = new ArrayList();
+        for (Cliente c : clientes.values()) {
+            boolean hayPedido = false;
+            for (Pedido p : pedidos) {
+                if (p.getClientePedido().equals(c)) {
+                    hayPedido = true;
+                    break;
+                }
+            }
+            if (hayPedido == false) {
+                sinPedidos.add(c);
+            }
+        }
+        System.out.println("LISTADO CLIENTES SIN PEDIDOS:");
+        sinPedidos.stream().forEach(sp->System.out.println(sp));
+    }
+    //</editor-fold>
 }
