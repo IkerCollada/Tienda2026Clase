@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -644,4 +646,50 @@ private void listadoPedido(){
         sinPedidos.stream().forEach(sp->System.out.println(sp));
     }
     //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="STREAMS">
+    private void listadoStreams(){
+        System.out.println("ARTICULOS DE MENOS DE 100 EUROS POR PRECIO DE - A");
+        articulos.values().stream()
+                .filter(a->a.getPvp()<100)
+                .sorted(Comparator.comparing(a->a.getPvp()))
+                .forEach(a->System.out.println(a));
+        
+        System.out.println("\n\nPEDIDOS ORDENADOS POR IMPORTE TOTAL");
+       /*pedidos.stream()
+                .sorted(Comparator.comparing(p -> totalPedido(p)))
+                .forEach(p->System.out.println(p + "- Total: " totalPedido(p)));*/
+                
+       System.out.println("\n\nPEDIDOS DE MAS DE 1000 EUROS (filter) POR LA FECHA DEL PEDIDO");
+                /*pedidos.stream().filter(p->totalPedido(p)>1000)
+                        .sorted(Comparator.comparing(Pedido::getFechaPedido))
+                        .forEach(p->System.out.println(p + "- Total: " + p.getFechaPedido());*/
+                
+        System.out.println("\n\n\nCONTABILIZAR LOS PEDIDOS DE UN DETERMINADO CLIENTE - PODRIA PEDIR NOMBRE O DNI POR TECLADO");
+        long numPedidos = pedidos.stream()
+                .filter(p -> p.getClientePedido().getIDcliente().equalsIgnoreCase("80580845T"))
+                .count(); //LA VARIABLE COUNT ES PARA CONTABILIZAR LOS PEDIDOS DE UN CLIENTE.
+                System.out.println(numPedidos); //para mostrar por consola el nº de pedidos del cliente
+        
+        //EL ESTILO TRADICIONAL SERÍA:
+        System.out.println("\nCONTABILIZACION AL ESTILO TRADICIONAL:");
+            long numPedidos2 = 0;
+            for (Pedido p : pedidos) {
+                if (p.getClientePedido().getIDcliente().equalsIgnoreCase("80580845T")) {
+                    numPedidos2++;
+                }
+        }
+                System.out.println(numPedidos2);
+            
+            
+        System.out.println("CONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - PARA LAS AGRUPACIONES SON IDEALES");
+        Map <Cliente, Long> numPedidosPorCliente =
+                pedidos.stream()
+                .collect(Collectors.groupingBy(Pedido::getClientePedido, Collectors.counting())); //voy pedido a pedido (Pedido::) y pillo a los clientes y se agrupan.
+                System.out.println(numPedidosPorCliente);
+        
+        System.out.println("\n\nTOTAL DE VENTAS POR PRODUCTO (groupingBy)");
+    }
+//</editor-fold>
 }
