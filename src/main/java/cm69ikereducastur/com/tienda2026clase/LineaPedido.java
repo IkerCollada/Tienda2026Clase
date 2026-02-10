@@ -9,20 +9,20 @@ package cm69ikereducastur.com.tienda2026clase;
  * @author 1dawd23
  */
 public class LineaPedido {
-    private String idArticulo;
+    private Articulo articulo;
     private int unidades;
 
-    public LineaPedido(String idArticulo, int unidades) {
-        this.idArticulo = idArticulo;
+    public LineaPedido(Articulo articulo, int unidades) {
+        this.articulo = articulo;
         this.unidades = unidades;
     }
-    //faltaban getter y setter
-    public String getIdArticulo() {
-        return idArticulo;
+
+    public Articulo getArticulo() {
+        return articulo;
     }
 
-    public void setIdArticulo(String idArticulo) {
-        this.idArticulo = idArticulo;
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
     }
 
     public int getUnidades() {
