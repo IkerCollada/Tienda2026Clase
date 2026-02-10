@@ -17,8 +17,8 @@ import java.util.Scanner;
  */
 public class Tienda2026Clase {
     
-    private Scanner sc=new Scanner(System.in);
-    private ArrayList<Pedido> pedidos;
+    private Scanner sc = new Scanner(System.in);
+    private ArrayList <Pedido> pedidos;
     private HashMap <String, Articulo> articulos;
     private HashMap <String, Cliente> clientes;
     
@@ -26,6 +26,13 @@ public class Tienda2026Clase {
         pedidos = new ArrayList();
         articulos= new HashMap();
         clientes = new HashMap();
+    }
+    
+/**getter para el ArrayList pedidos, ya que sin un getter no podemos 
+ * testear métodos de la clase Tienda2026.
+ */
+    public ArrayList<Pedido> getPedidos() {
+        return pedidos;
     }
     
     public static void main(String[] args) {
@@ -130,7 +137,7 @@ public class Tienda2026Clase {
                     nuevoPedido();
                     break;
                 case 2:
-                    //listadoPedidos();
+                    listadoPedido();
                     break;
             }
         } while (opcion != 9);
@@ -312,9 +319,9 @@ private void listadoPedido(){
         }         
     }
     
-    private double totalPedido (Pedido p){
+    public double totalPedido (Pedido p){
         double totalPedido=0;
-        for (LineaPedido l: p.getCestaCompra()){
+        for (LineaPedido l : p.getCestaCompra()){
              totalPedido+=l.getUnidades()*articulos.get(l.getIdArticulo()).getPvp();
         }
         return totalPedido;
@@ -591,7 +598,6 @@ private void listadoPedido(){
             System.out.println("ESE CLIENTE NO EXISTE");
         }
     }
-    
     /*public double totalPedidoExam (p){
         return totalPedido;
     }*/
