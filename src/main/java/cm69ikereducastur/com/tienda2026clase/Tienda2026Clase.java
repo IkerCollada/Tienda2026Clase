@@ -670,7 +670,7 @@ private void listadoPedido(){
         long numPedidos = pedidos.stream()
                 .filter(p -> p.getClientePedido().getIDcliente().equalsIgnoreCase("80580845T"))
                 .count(); //LA VARIABLE COUNT ES PARA CONTABILIZAR LOS PEDIDOS DE UN CLIENTE.
-                System.out.println(numPedidos); //para mostrar por consola el nº de pedidos del cliente
+                System.out.println(numPedidos); //para mostrar por consola el nº de pedidos del cliente.
         
         //EL ESTILO TRADICIONAL SERÍA:
         System.out.println("\nCONTABILIZACION AL ESTILO TRADICIONAL:");
@@ -683,13 +683,27 @@ private void listadoPedido(){
                 System.out.println(numPedidos2);
             
             
-        System.out.println("CONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - PARA LAS AGRUPACIONES SON IDEALES");
-        Map <Cliente, Long> numPedidosPorCliente =
+        System.out.println("\n\nCONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - PARA LAS AGRUPACIONES SON IDEALES");
+        Map <Cliente, Long> numPedidosPorCliente = //siempre que se use un groupingby, necesitamos un Map.
                 pedidos.stream()
-                .collect(Collectors.groupingBy(Pedido::getClientePedido, Collectors.counting())); //voy pedido a pedido (Pedido::) y pillo a los clientes y se agrupan.
-                System.out.println(numPedidosPorCliente);
+                .collect(Collectors.groupingBy(Pedido :: getClientePedido , Collectors.counting())); //voy pedido a pedido (Pedido::) y pillo a los clientes y se agrupan.
+                System.out.println(numPedidosPorCliente); 
         
-        System.out.println("\n\nTOTAL DE VENTAS POR PRODUCTO (groupingBy)");
+        System.out.println("\n\n");
     }
+    //METODO UNIDAES VENDIDAS QUE HABIA QUE HACER EN EL EJERCICIO DEL EXAMEN (EN TRES FORMAS)
+    private int unidadesVendidas2(Articulo a){
+        int total = 0;
+            for (Pedido p : pedidos) {
+                total += p.getCestaCompra().stream().filter(l->l.getArticulo().equals(a))
+                        .mapToInt(LineaPedido::getUnidades).sum();
+            }
+        return total;
+    }
+    private int unidadesVendidas3(Articulo a){
+        int s = 10;
+        return s;
+    }
+    
 //</editor-fold>
 }
