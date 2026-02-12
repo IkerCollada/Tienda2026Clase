@@ -26,7 +26,7 @@ public class Tienda2026Clase {
     
     public Tienda2026Clase() {
         pedidos = new ArrayList();
-        articulos= new HashMap();
+        articulos = new HashMap();
         clientes = new HashMap();
     }
     
@@ -46,6 +46,7 @@ public class Tienda2026Clase {
         //t2026.tres();
         //t2026.cuatro();
         //t2026.cinco();
+        t2026.listadoStreams();
     }
     
     //<editor-fold defaultstate="collapsed" desc="MENUES">
@@ -690,9 +691,36 @@ private void listadoPedido(){
                 System.out.println(numPedidosPorCliente); 
         
         System.out.println("\n\n");
+        for (Cliente c : clientes.values()) { /*Antes de bajar al flatmap, hacemos un filter.
+                                                Si queremos pasar a LineaPedido tenemos que 
+                                                hacer desde el ArrayList pedidos el flatMap.*/
+            int unidades = pedidos.stream().filter(p -> p.getClientePedido().equals(c))
+                    .flatMap(p -> p.getCestaCompra().stream()).filter(lp -> lp.getArticulo().equals()) 
+                    .mapToInt(LineaPedido::getUnidades).sum();
+        }
+        
+        System.out.println("\n\nTODOS LOS ARTICULOS VENDIDOS");
+        /*En este listado no hay repeticiones gracias al toSet, que quita todas las repeticiones
+        que hayan.*/
+        pedidos.stream().flatMap(p -> p.getCestaCompra().stream())
+                .map(LineaPedido::getArticulo)
+                .collect(Collectors.toSet());
+        
     }
     //METODO UNIDAES VENDIDAS QUE HABIA QUE HACER EN EL EJERCICIO DEL EXAMEN (EN TRES FORMAS)
-    private int unidadesVendidas2(Articulo a){
+    private int unidadesVendidas1(Articulo a){ //Noob
+        int total = 0;
+            for (Pedido p : pedidos) {
+                for (LineaPedido lp : p.getCestaCompra()) {
+                    if (lp.getArticulo().equals(a)) {
+                        total += lp.getUnidades();
+                    }
+                }
+            }
+        return total;
+    }
+    
+    private int unidadesVendidas2(Articulo a){ //Pro
         int total = 0;
             for (Pedido p : pedidos) {
                 total += p.getCestaCompra().stream().filter(l->l.getArticulo().equals(a))
@@ -700,9 +728,12 @@ private void listadoPedido(){
             }
         return total;
     }
-    private int unidadesVendidas3(Articulo a){
-        int s = 10;
-        return s;
+    private int unidadesVendidas3(Articulo a){ //Hacker
+        /*el flatMap te permite hacer subStreams (lo que tradicionalmente 
+        sería un bucle dentro de otro, solo que con un stream dentro de otro).*/
+        return pedidos.stream().flatMap(p -> p.getCestaCompra().stream())
+                .filter(l -> l.getArticulo().equals(a))
+                .mapToInt(LineaPedido::getUnidades).sum();
     }
     
 //</editor-fold>
