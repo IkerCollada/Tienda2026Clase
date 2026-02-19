@@ -741,7 +741,7 @@ private void listadoPedido(){
     
     public void repasoStreams2(){
         //EJERCICIOS CON MÉTODOS DEL API PARA REALIZAR CALCULOS count() map() mapToInt() .collect(Collectors.groupingBy)...
-        System.out.println("CONTABILIZAR LOS PEDIDOS DE UN DETERMINADO CLIENTE - NOMBRE O DNI POR TECLADO");
+        System.out.println("\n\nCONTABILIZAR LOS PEDIDOS DE UN DETERMINADO CLIENTE - NOMBRE O DNI POR TECLADO");
         String dni;
         do {            
             System.out.print("ID Cliente: ");
@@ -757,7 +757,7 @@ private void listadoPedido(){
         
         System.out.println("Nº pedidos del cliente: " + clientes.get(dni).getNombre() + ": " + numPedidos);
         
-        System.out.println("CONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - "
+        System.out.println("\n\nCONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - "
                 + "PARA LAS AGRUPACIONES SON IDEALES LOS MAPAS PORQUE PUEDEN CONTENER 2 DATOS");
         Map <Cliente, Long> numPedidosPorCliente = pedidos.stream()
                 .collect(Collectors.groupingBy(Pedido :: getClientePedido, Collectors.counting()));
@@ -766,18 +766,15 @@ private void listadoPedido(){
         El collect agrupa los pedidos de cada cliente, y el Collectors.groupingBy está viendo
         cómo los agrupas. En este caso los agrupas por pedidos de cada cliente (Pedido :: getClientePedido).
         Collectors.counting cuenta pedidos para cada cliente.*/
-       
         for (Cliente c : numPedidosPorCliente.keySet()){
-            System.out.println(c + " - " + numPedidosPorCliente.get(c));    
+            System.out.println(c + " - " + numPedidosPorCliente.get(c));
         }
         
         System.out.println("TOTAL DE UNIDADES VENDIDAS DE UN ARTICULO EN TODOS LOS PEDIDOS. PODEMOS APLICARLO AL"
                 + "MÉTODO UNIDADES VENDIDAS QUE HABÍA QUE HACER EN EL EJERCICIO 4 DE LA ÚLTIMA PRUEBA");
         
-        
-         
-        System.out.println("\n"); 
-        for (Articulo a:articulos.values()){
+        System.out.println("\n");
+        for (Articulo a : articulos.values()){
             int total=0;
             for (Pedido p:pedidos){
                 total += p.getCestaCompra().stream().filter(l->l.getArticulo().equals(a))
@@ -785,7 +782,6 @@ private void listadoPedido(){
             }
             System.out.println(a + " - " + total);
         }
-        
     }
 //</editor-fold>
 }
