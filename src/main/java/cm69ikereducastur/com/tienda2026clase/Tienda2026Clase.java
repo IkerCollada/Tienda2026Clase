@@ -46,7 +46,8 @@ public class Tienda2026Clase {
         //t2026.tres();
         //t2026.cuatro();
         //t2026.cinco();
-        t2026.listadoStreams();
+        //t2026.listadoStreams();
+        t2026.repasoStreams2();
     }
     
     //<editor-fold defaultstate="collapsed" desc="MENUES">
@@ -269,7 +270,8 @@ private void listadoPedido(){
         String idCliente;
         do{
             System.out.println("DNI (id) CLIENTE:");
-            idCliente=sc.nextLine().toUpperCase();
+            idCliente = sc.nextLine().toUpperCase();
+            
             if (!clientes.containsKey(idCliente)){
                 System.out.println("No es cliente de la tienda."
                         + " Desea darse de alta o compra como invitado");
@@ -278,9 +280,10 @@ private void listadoPedido(){
         
         ArrayList <LineaPedido> cestaCompra =new ArrayList();
         String idArticulo;
-        int unidades=0;
+        int unidades = 0;
         System.out.print("\nTecle el ID del artículo deseado (FIN para terminar la compra)");
         idArticulo = sc.next();
+        
         while (!idArticulo.equalsIgnoreCase("FIN")){
             System.out.print("\nTeclea las unidades deseadas: ");
             unidades = sc.nextInt();
@@ -694,9 +697,9 @@ private void listadoPedido(){
         for (Cliente c : clientes.values()) { /*Antes de bajar al flatmap, hacemos un filter.
                                                 Si queremos pasar a LineaPedido tenemos que 
                                                 hacer desde el ArrayList pedidos el flatMap.*/
-            int unidades = pedidos.stream().filter(p -> p.getClientePedido().equals(c))
-                    .flatMap(p -> p.getCestaCompra().stream()).filter(lp -> lp.getArticulo().equals()) 
-                    .mapToInt(LineaPedido::getUnidades).sum();
+            /*int unidades = pedidos.stream().filter(p -> p.getClientePedido().equals(c))
+                    .flatMap(l -> l.getCestaCompra().stream()).filter(l -> l.getArticulo().equalsIgnoreCase()) 
+                    .mapToInt(LineaPedido::getUnidades).sum();*/
         }
         
         System.out.println("\n\nTODOS LOS ARTICULOS VENDIDOS");
@@ -736,5 +739,53 @@ private void listadoPedido(){
                 .mapToInt(LineaPedido::getUnidades).sum();
     }
     
+    public void repasoStreams2(){
+        //EJERCICIOS CON MÉTODOS DEL API PARA REALIZAR CALCULOS count() map() mapToInt() .collect(Collectors.groupingBy)...
+        System.out.println("CONTABILIZAR LOS PEDIDOS DE UN DETERMINADO CLIENTE - NOMBRE O DNI POR TECLADO");
+        String dni;
+        do {            
+            System.out.print("ID Cliente: ");
+            dni = sc.next().toUpperCase();
+        } while (!MetodosAux.validarDNI(dni) && !clientes.containsKey(dni));
+        
+        String dni1 = dni; //String de paso, porque al acabar el bucle do-while, este no guarda el String en el Stream.
+
+        long numPedidos;
+        numPedidos = pedidos.stream()
+                .filter(p -> p.getClientePedido().getIDcliente().equals(dni1))
+                .count();
+        
+        System.out.println("Nº pedidos del cliente: " + clientes.get(dni).getNombre() + ": " + numPedidos);
+        
+        System.out.println("CONTABILIZAR CUANTOS PEDIDOS HAY POR CLIENTE - "
+                + "PARA LAS AGRUPACIONES SON IDEALES LOS MAPAS PORQUE PUEDEN CONTENER 2 DATOS");
+        Map <Cliente, Long> numPedidosPorCliente = pedidos.stream()
+                .collect(Collectors.groupingBy(Pedido :: getClientePedido, Collectors.counting()));
+        
+        /*Hacemos un map para cada cliente (Cliente) y sus pedidos (long).
+        El collect agrupa los pedidos de cada cliente, y el Collectors.groupingBy está viendo
+        cómo los agrupas. En este caso los agrupas por pedidos de cada cliente (Pedido :: getClientePedido).
+        Collectors.counting cuenta pedidos para cada cliente.*/
+       
+        for (Cliente c : numPedidosPorCliente.keySet()){
+            System.out.println(c + " - " + numPedidosPorCliente.get(c));    
+        }
+        
+        System.out.println("TOTAL DE UNIDADES VENDIDAS DE UN ARTICULO EN TODOS LOS PEDIDOS. PODEMOS APLICARLO AL"
+                + "MÉTODO UNIDADES VENDIDAS QUE HABÍA QUE HACER EN EL EJERCICIO 4 DE LA ÚLTIMA PRUEBA");
+        
+        
+         
+        System.out.println("\n"); 
+        for (Articulo a:articulos.values()){
+            int total=0;
+            for (Pedido p:pedidos){
+                total += p.getCestaCompra().stream().filter(l->l.getArticulo().equals(a))
+                .mapToInt(LineaPedido::getUnidades).sum();
+            }
+            System.out.println(a + " - " + total);
+        }
+        
+    }
 //</editor-fold>
 }
