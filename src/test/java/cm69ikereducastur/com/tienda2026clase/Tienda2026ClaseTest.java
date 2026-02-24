@@ -30,7 +30,7 @@ public class Tienda2026ClaseTest {
     
     @BeforeEach
     public void setUp() {
-        t.cargaDatos();
+        t.cargaDatos(); //necesitamos el carga datos para realizar las pruebas.
     }
     
     @AfterEach
@@ -38,208 +38,50 @@ public class Tienda2026ClaseTest {
     }
     
     Tienda2026Clase t = new Tienda2026Clase();
-
+    
+    @Test
     /**
-     * Test of main method, of class Tienda2026Clase.
+     * Añadimos un getter al ArrayList pedidos, porque sino, no nos dejará añadir 
+     * datos como prueba de su funcionalidad.
      */
-    @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        Tienda2026Clase.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of menu method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testMenu() {
-        System.out.println("menu");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.menu();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of menuArticulos method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testMenuArticulos() {
-        System.out.println("menuArticulos");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.menuArticulos();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of menuClientes method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testMenuClientes() {
-        System.out.println("menuClientes");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.menuClientes();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of menuPedidos method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testMenuPedidos() {
-        System.out.println("menuPedidos");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.menuPedidos();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**Hemos tenido que añadir un getter al ArrayList pedidos, porque sino, no nos dejará añadir 
-     * datos como prueba de su funcionalidad.*/
-    @Test
     public void testTotalPedido() {
        assertAll(
                 () -> assertEquals(585,t.totalPedido(t.getPedidos().get(0))),
                 () -> assertEquals(2980,t.totalPedido(t.getPedidos().get(1))),
                 () -> assertEquals(390,t.totalPedido(t.getPedidos().get(2))),
-                () -> assertEquals(1980,t.totalPedido(t.getPedidos().get(3)))
+                () -> assertEquals(1980,t.totalPedido(t.getPedidos().get(3))),
+                () -> assertEquals(2160,t.totalPedido(t.getPedidos().get(4)))
         );
     }
 
-    /**
-     * Test of cargaDatos method, of class Tienda2026Clase.
-     */
     @Test
+    /**
+     * Añadimos un getter a los HashMaps articulos y clientes, porque sino, no nos dejará añadir 
+     * datos como prueba de su funcionalidad (como pasa con el ArrayList pedidos).
+     */
     public void testCargaDatos() {
-        System.out.println("cargaDatos");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.cargaDatos();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertAll (
+                () -> assertEquals(10, t.getArticulos().size()),
+                () -> assertEquals(4,t.getClientes().size()),        
+                () -> assertEquals(5, t.getPedidos().size())
+        );
     }
-
-    /**
-     * Test of uno method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testUno() {
-        System.out.println("uno");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.uno();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    
+    public void testGeneraIdPedido(){
+        assertAll(
+                () -> assertEquals("80580845T-003/2026", t.generaIdPedido("80580845T")),
+                () -> assertEquals("36347775R-003/2026", t.generaIdPedido("36347775R")),
+                () -> assertEquals("63921307Y-002/2026", t.generaIdPedido("63921307Y")),
+                () -> assertEquals("02337565Y-001/2026", t.generaIdPedido("02337565Y"))
+        );
     }
-
-    /**
-     * Test of dos method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testDos() {
-        System.out.println("dos");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.dos();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of tres method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testTres() {
-        System.out.println("tres");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.tres();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of cuatro method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testCuatro() {
-        System.out.println("cuatro");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.cuatro();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of cinco method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testCinco() {
-        System.out.println("cinco");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.cinco();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of unoCorregido method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testUnoCorregido() {
-        System.out.println("unoCorregido");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.unoCorregido();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of dosCorregido method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testDosCorregido() {
-        System.out.println("dosCorregido");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.dosCorregido();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of tresCorregido method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testTresCorregido() {
-        System.out.println("tresCorregido");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.tresCorregido();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of cuatroCorregido method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testCuatroCorregido() {
-        System.out.println("cuatroCorregido");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.cuatroCorregido();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of cincoCorregido method, of class Tienda2026Clase.
-     */
-    @Test
-    public void testCincoCorregido() {
-        System.out.println("cincoCorregido");
-        Tienda2026Clase instance = new Tienda2026Clase();
-        instance.cincoCorregido();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    
+    public void testTotalPorCliente() {
+       assertAll(
+                () -> assertEquals(3565,t.totalCliente(t.getClientes().get("80580845T"))),
+                () -> assertEquals(2270,t.totalCliente(t.getClientes().get("36347775R"))),
+                () -> assertEquals(2160,t.totalCliente(t.getClientes().get("63921307Y"))),
+                () -> assertEquals(0,t.totalCliente(t.getClientes().get("02337565Y")))
+        );
     }
 }

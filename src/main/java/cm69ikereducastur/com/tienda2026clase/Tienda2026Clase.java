@@ -29,23 +29,42 @@ public class Tienda2026Clase {
         articulos = new HashMap();
         clientes = new HashMap();
     }
-    
-/**getter para el ArrayList pedidos, ya que sin un getter no podemos 
+
+/**
+ * getter para los ArrayList Pedidos, Articulos y Clientes, ya que sin un getter no podemos 
  * testear métodos de la clase Tienda2026.
  */
     public ArrayList <Pedido> getPedidos() {
         return pedidos;
     }
     
+    public HashMap<String, Articulo> getArticulos() {
+        return articulos;
+    }
+
+    public HashMap<String, Cliente> getClientes() {
+        return clientes;
+    }
+    
     public static void main(String[] args) {
         Tienda2026Clase t2026=new Tienda2026Clase();
         t2026.cargaDatos();
         //t2026.menu();
-        //t2026.uno();
+        //<editor-fold defaultstate="collapsed" desc="Examen tienda">
+        t2026.uno();
         t2026.dos();
-        //t2026.tres();
-        //t2026.cuatro();
-        //t2026.cinco();
+        t2026.tres();
+        t2026.cuatro();
+        t2026.cinco();
+        
+        //Examen con Streams:
+        //t2026.uno1();
+        //t2026.dos2();
+        //t2026.tres3();
+        //t2026.cuatro4();
+        //t2026.cinco5();
+//</editor-fold>
+        
         //t2026.listadoStreams();
         //t2026.repasoStreams2();
         
@@ -242,7 +261,7 @@ private void listadoPedido(){
 
     }
     
-    private String generaIdPedido(String idCliente){ 
+    public String generaIdPedido(String idCliente){ 
         String nuevoId; //vble String para ir construyendo un nuevo idPedido
          //Calculamos en la vble contador cuantos pedidos tiene el cliente aportado
         int contador = 0;  
@@ -370,7 +389,7 @@ private void listadoPedido(){
     
     //<editor-fold defaultstate="collapsed" desc="EJERCICIOS">
     
-    public void uno1(){
+    public void uno(){
         int opcion;
         do {            
             System.out.println("\n\n\t\t\tESCOGA UNA SECCION");
@@ -432,7 +451,7 @@ private void listadoPedido(){
         }
     }
     
-    public void dos1(){
+    public void dos(){
         System.out.println("\n\nPERIFERICOS:");
         for (Articulo a : articulos.values()) {
             if (a.getIdArticulo().startsWith("1")) {
@@ -459,7 +478,7 @@ private void listadoPedido(){
         }
     }
     
-    public void tres1(){ //revisar
+    public void tres(){ //revisar
         String dni;
         do {            
            System.out.println("DNI CLIENTE:");
@@ -514,7 +533,7 @@ private void listadoPedido(){
     }*/
     
     
-    public void cuatro1(){
+    public void cuatro(){
         System.out.println("\n\n\t\tLISTADO ARTICULOS - \t\tUNIDADES VENDIDAS");
         for (Articulo a : articulos.values()) {
             int unidades = 0; 
@@ -535,7 +554,7 @@ private void listadoPedido(){
         return unidades;
     }
     
-    public void cinco1(){
+    public void cinco(){
         ArrayList <Cliente> sinPedidos = new ArrayList();
         for (Cliente c : clientes.values()) {
             boolean hayPedido = false;
@@ -654,7 +673,15 @@ private void listadoPedido(){
     
     
     //<editor-fold defaultstate="collapsed" desc="STREAMS">
+    public double totalCliente(Cliente c){
+        return pedidos.stream().filter(p-> p.getClientePedido().equals(c))
+                .mapToDouble(p -> totalPedido(p)).sum();
+    }
+    
     private void listadoStreams(){
+        
+        
+        
         System.out.println("ARTICULOS DE MENOS DE 100 EUROS POR PRECIO DE - A");
         articulos.values().stream()
                 .filter(a->a.getPvp()<100)
@@ -788,12 +815,12 @@ private void listadoPedido(){
     
     
     //<editor-fold defaultstate="collapsed" desc="EXAMEN STREAMS">
-    private void uno(){
+    private void uno1(){
         //clientes.values().stream().sorted(Comparator.comparing(Cliente :: ));
     }
     
     
-    private void dos(){
+    private void dos2(){
         System.out.print("SECCION A LISTAR: ");
         String seccion = sc.next();
         
@@ -802,7 +829,7 @@ private void listadoPedido(){
                 .forEach(a -> System.out.println(a));
     }
     
-    private void tres(){
+    private void tres3(){
         //La nueva colección debe contener los artículos de los 
         //que todavía NO SE HA VENDIDO ninguna unidad.
         //Map <Pedido, long> articulosNoVendidos = pedidos.stream()
@@ -810,14 +837,14 @@ private void listadoPedido(){
                 
     }
     
-    private void cuatro(){
+    private void cuatro4(){
         //Total facturado en la tienda en los últimos 5 días
         LocalDate hoy = LocalDate.now();
         //pedidos.stream().filter();
         
     }
     
-    private void cinco(){
+    private void cinco5(){
         //pedidos.stream().filter()
     }
     
