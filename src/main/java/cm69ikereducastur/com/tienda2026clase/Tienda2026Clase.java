@@ -42,12 +42,13 @@ public class Tienda2026Clase {
         t2026.cargaDatos();
         //t2026.menu();
         //t2026.uno();
-        //t2026.dos();
+        t2026.dos();
         //t2026.tres();
         //t2026.cuatro();
         //t2026.cinco();
         //t2026.listadoStreams();
-        t2026.repasoStreams2();
+        //t2026.repasoStreams2();
+        
     }
     
     //<editor-fold defaultstate="collapsed" desc="MENUES">
@@ -369,7 +370,7 @@ private void listadoPedido(){
     
     //<editor-fold defaultstate="collapsed" desc="EJERCICIOS">
     
-    public void uno(){
+    public void uno1(){
         int opcion;
         do {            
             System.out.println("\n\n\t\t\tESCOGA UNA SECCION");
@@ -431,7 +432,7 @@ private void listadoPedido(){
         }
     }
     
-    public void dos(){
+    public void dos1(){
         System.out.println("\n\nPERIFERICOS:");
         for (Articulo a : articulos.values()) {
             if (a.getIdArticulo().startsWith("1")) {
@@ -458,7 +459,7 @@ private void listadoPedido(){
         }
     }
     
-    public void tres(){ //revisar
+    public void tres1(){ //revisar
         String dni;
         do {            
            System.out.println("DNI CLIENTE:");
@@ -513,7 +514,7 @@ private void listadoPedido(){
     }*/
     
     
-    public void cuatro(){
+    public void cuatro1(){
         System.out.println("\n\n\t\tLISTADO ARTICULOS - \t\tUNIDADES VENDIDAS");
         for (Articulo a : articulos.values()) {
             int unidades = 0; 
@@ -534,7 +535,7 @@ private void listadoPedido(){
         return unidades;
     }
     
-    public void cinco(){
+    public void cinco1(){
         ArrayList <Cliente> sinPedidos = new ArrayList();
         for (Cliente c : clientes.values()) {
             boolean hayPedido = false;
@@ -783,5 +784,42 @@ private void listadoPedido(){
             System.out.println(a + " - " + total);
         }
     }
+//</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="EXAMEN STREAMS">
+    private void uno(){
+        //clientes.values().stream().sorted(Comparator.comparing(Cliente :: ));
+    }
+    
+    
+    private void dos(){
+        System.out.print("SECCION A LISTAR: ");
+        String seccion = sc.next();
+        
+        articulos.values().stream().sorted(Comparator.comparing(Articulo :: getPvp).reversed())
+                .filter(a -> a.getIdArticulo().startsWith(seccion) && a.getExistencias() > 0)
+                .forEach(a -> System.out.println(a));
+    }
+    
+    private void tres(){
+        //La nueva colección debe contener los artículos de los 
+        //que todavía NO SE HA VENDIDO ninguna unidad.
+        //Map <Pedido, long> articulosNoVendidos = pedidos.stream()
+                
+                
+    }
+    
+    private void cuatro(){
+        //Total facturado en la tienda en los últimos 5 días
+        LocalDate hoy = LocalDate.now();
+        //pedidos.stream().filter();
+        
+    }
+    
+    private void cinco(){
+        //pedidos.stream().filter()
+    }
+    
 //</editor-fold>
 }
