@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -51,18 +52,18 @@ public class Tienda2026Clase {
         t2026.cargaDatos();
         //t2026.menu();
         //<editor-fold defaultstate="collapsed" desc="Examen tienda">
-        t2026.uno();
-        t2026.dos();
-        t2026.tres();
-        t2026.cuatro();
-        t2026.cinco();
+        //t2026.uno();
+        //t2026.dos();
+        //t2026.tres();
+        //t2026.cuatro();
+        //t2026.cinco();
         
         //Examen con Streams:
         //t2026.uno1();
-        //t2026.dos2();
-        //t2026.tres3();
-        //t2026.cuatro4();
-        //t2026.cinco5();
+        //t2026.dos1();
+        //t2026.tres1();
+        //t2026.cuatro1();
+        //t2026.cinco1();
 //</editor-fold>
         
         //t2026.listadoStreams();
@@ -275,14 +276,14 @@ private void listadoPedido(){
         return nuevoId;
     }
     
-    private void stock (String idArticulo, int unidades) throws StockCero, StockInsuficiente {
-        if (articulos.get(idArticulo).getExistencias()==0){
+    private void stock (Articulo a, int unidades) throws StockCero, StockInsuficiente {
+        if (a.getExistencias() == 0){
             throw new StockCero("0 unidades disponibles de: " 
-                    + articulos.get(idArticulo).getDescripcion());
+                    + a.getDescripcion());
         }
-        if (articulos.get(idArticulo).getExistencias() < unidades){
-            throw new StockInsuficiente("Sólo hay " + articulos.get(idArticulo).getExistencias() 
-                    + " unidades disponibles de: " + articulos.get(idArticulo).getDescripcion());
+        if (a.getExistencias() < unidades){
+            throw new StockInsuficiente("Sólo hay " + a.getExistencias() 
+                    + " unidades disponibles de: " + a.getDescripcion());
         }
     }
     
@@ -308,7 +309,7 @@ private void listadoPedido(){
             System.out.print("\nTeclea las unidades deseadas: ");
             unidades = sc.nextInt();
             try {
-                stock(idArticulo, unidades);
+                stock(articulos.get(idArticulo), unidades);
                 cestaCompra.add(new LineaPedido(articulos.get(idArticulo),unidades));
             } catch (StockCero ex) {
                 System.out.println(ex.getMessage());
@@ -820,7 +821,7 @@ private void listadoPedido(){
     }
     
     
-    private void dos2(){
+    private void dos1(){
         System.out.print("SECCION A LISTAR: ");
         String seccion = sc.next();
         
@@ -829,7 +830,7 @@ private void listadoPedido(){
                 .forEach(a -> System.out.println(a));
     }
     
-    private void tres3(){
+    private void tres1(){
         //La nueva colección debe contener los artículos de los 
         //que todavía NO SE HA VENDIDO ninguna unidad.
         //Map <Pedido, long> articulosNoVendidos = pedidos.stream()
@@ -837,16 +838,62 @@ private void listadoPedido(){
                 
     }
     
-    private void cuatro4(){
+    private void cuatro1(){
         //Total facturado en la tienda en los últimos 5 días
         LocalDate hoy = LocalDate.now();
         //pedidos.stream().filter();
         
     }
     
-    private void cinco5(){
+    private void cinco1(){
         //pedidos.stream().filter()
     }
     
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="EXAMEN STREAMS CORREGIDO">
+    private void uno1Corregido (){
+        clientes.values().stream().sorted(Comparator.comparing(c -> totalCliente((Cliente)c)).reversed())
+                .forEach(c -> System.out.println(c + "\t\tTotal Gastado: " + totalCliente(c)));
+    }
+    
+    private void dos1Corregido(){
+        System.out.print("SECCION A LISTAR: ");
+        String seccion = sc.next();
+        //Primero viene el filter y luego el sorted.
+        articulos.values().stream().filter(a -> a.getIdArticulo().startsWith(seccion) && a.getExistencias() > 0)
+                .sorted(Comparator.comparing(Articulo :: getPvp).reversed())
+                .forEach(a -> System.out.println(a));
+    }
+    
+    private void tres1Corregido (){
+        Set <Articulo> vendidos = pedidos.stream().flatMap(p -> p.getCestaCompra().stream())
+                .map(LineaPedido::getArticulo)
+                .collect(Collectors.toSet());
+        
+        List <Articulo> noVendidos = articulos.values().stream().filter(a -> !vendidos.contains(a))
+                .toList();
+        System.out.println("\n");
+        noVendidos.stream().forEach(a -> System.out.println(a));
+    }
+    
+    private void cuatro1Corregido (){
+        LocalDate fecha = LocalDate.now().minusDays(5);
+        
+        double total5dias = pedidos.stream().filter(p -> p.getFechaPedido().isAfter(fecha))
+                .flatMap(p -> p.getCestaCompra().stream())
+                        .mapToDouble(lp -> lp.getArticulo().getPvp() * lp.getUnidades()).sum();
+        
+        System.out.println("\nTotal facturado los ultimo 5 dias: " + total5dias);
+    }
+    
+    private void cinco1Corregido (){
+        var importePedidos = pedidos.stream().flatMap(p -> p.getCestaCompra().stream())
+                .mapToDouble(lp -> lp.getArticulo().getPvp() * lp.getUnidades()).sum();
+        
+        System.out.println("\nImporte medio pedidos TIENDA: " + importePedidos / pedidos.size());
+        
+        
+    }
 //</editor-fold>
 }
