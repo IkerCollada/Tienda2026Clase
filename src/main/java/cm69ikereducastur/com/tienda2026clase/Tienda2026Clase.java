@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -68,6 +69,7 @@ public class Tienda2026Clase {
         
         //t2026.listadoStreams();
         //t2026.repasoStreams2();
+        t2026.colecciones();
         
     }
     
@@ -359,34 +361,6 @@ private void listadoPedido(){
       AHORA: l.getArticulo().getPVP();
     */
     //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="CARGA DATOS">
-    public void cargaDatos(){
-        clientes.put("80580845T", new Cliente("80580845T", "ANA ", "658111111", "ana@gmail.com"));
-        clientes.put("36347775R", new Cliente("36347775R", "LOLA", "649222222", "lola@gmail.com"));
-        clientes.put("63921307Y", new Cliente("63921307Y", "JUAN", "652333333", "juan@gmail.com"));
-        clientes.put("02337565Y", new Cliente("02337565Y", "EDU", "634567890", "edu@gmail.com"));
-
-        articulos.put("1-11", new Articulo("1-11", "RATON LOGITECH ST ", 0, 15));
-        articulos.put("1-22", new Articulo("1-22", "TECLADO STANDARD  ", 5, 18));
-        articulos.put("2-11", new Articulo("2-11", "HDD SEAGATE 1 TB  ", 15, 80));
-        articulos.put("2-22", new Articulo("2-22", "SSD KINGSTOM 256GB", 9, 70));
-        articulos.put("2-33", new Articulo("2-33", "SSD KINGSTOM 512GB", 0, 200));
-        articulos.put("3-11", new Articulo("3-11", "HP LASERJET HP800 ", 2, 200));
-        articulos.put("3-22", new Articulo("3-22", "EPSON PRINT XP300 ", 5, 80));
-        articulos.put("4-11", new Articulo("4-11", "ASUS  MONITOR  22 ", 5, 100));
-        articulos.put("4-22", new Articulo("4-22", "HP MONITOR LED 28 ", 5, 180));
-        articulos.put("4-33", new Articulo("4-33", "SAMSUNG ODISSEY G5", 12, 580));
-
-        LocalDate hoy = LocalDate.now();
-        pedidos.add(new Pedido("80580845T-001/2025", clientes.get("80580845T"), hoy.minusDays(1), new ArrayList<>(List.of(new LineaPedido(articulos.get("1-11"), 3), new LineaPedido(articulos.get("4-22"), 3)))));
-        pedidos.add(new Pedido("80580845T-002/2025", clientes.get("80580845T"), hoy.minusDays(2), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-11"), 3), new LineaPedido(articulos.get("4-22"), 2), new LineaPedido(articulos.get("4-33"), 4)))));
-        pedidos.add(new Pedido("36347775R-001/2025", clientes.get("36347775R"), hoy.minusDays(3), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-22"), 1), new LineaPedido(articulos.get("2-22"), 3)))));
-        pedidos.add(new Pedido("36347775R-002/2025", clientes.get("36347775R"), hoy.minusDays(5), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-33"), 3), new LineaPedido(articulos.get("2-11"), 3)))));
-        pedidos.add(new Pedido("63921307Y-001/2025", clientes.get("63921307Y"), hoy.minusDays(4), new ArrayList<>(List.of(new LineaPedido(articulos.get("2-11"), 5), new LineaPedido(articulos.get("2-33"), 3), new LineaPedido(articulos.get("4-33"), 2)))));
-    }
-//</editor-fold>
-    
     
     //<editor-fold defaultstate="collapsed" desc="EJERCICIOS">
     
@@ -894,6 +868,116 @@ private void listadoPedido(){
         System.out.println("\nImporte medio pedidos TIENDA: " + importePedidos / pedidos.size());
         
         
+    }
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="COLECCIONES">
+    public void colecciones(){
+        System.out.println("==========Ej 1.==========");
+        //Pedidos ordenados por fecha
+        List <Pedido> pedidosOrdenadosFecha
+                = pedidos.stream().sorted(Comparator.comparing(Pedido :: getFechaPedido))
+                .collect(Collectors.toList()); //.toList recolecta una lista.
+        //Para comprobar:
+        System.out.println("Sin ordenar:");
+        pedidos.stream().forEach(p -> System.out.println(p.getIDpedido() + " - " + p.getFechaPedido()));
+        System.out.println("\n");
+        System.out.println("Ordenado:");
+        pedidosOrdenadosFecha.stream().forEach(p -> System.out.println(p.getIDpedido() + " - " + p.getFechaPedido()));
+     
+        
+        System.out.println("\n\n==========Ej 2.==========");
+        //Pedidos ordenados por el total de cada pedido y su pedido
+        TreeMap <Double, Pedido> pedidosTotalizados = new TreeMap(); //TreeMap ordena por clave
+        for (Pedido p : pedidos) {
+            pedidosTotalizados.put(totalPedido(p), p);
+        }
+        //Para comprobar:
+        for (Double total : pedidosTotalizados.descendingKeySet()) { //descendingKeySet ordena de mayor a menor (solo se puede usar si usas un TreeMap)
+            System.out.println(pedidosTotalizados.get(total).getIDpedido()+ " - " + total);
+        }
+        
+        
+        System.out.println("\n\n==========Ej 3.==========");
+        //Clientes ordenados por el total gastado
+        TreeMap <Double, Cliente> clienteTotalizado = new TreeMap();
+        for (Cliente c : clientes.values()) {
+            clienteTotalizado.put(totalCliente(c), c);
+        }
+        //Para comprobar:
+        for (Double total : clienteTotalizado.descendingKeySet()) {
+            System.out.println(clienteTotalizado.get(total).getNombre() + " - " + total);
+        }
+        
+        
+        System.out.println("\n\n==========Ej 4.==========");
+        /*Lista de "Perifericos", "alamcenamiento", "monitores" e "impresoras" 
+        (4 colecciones) y llevarlos a los artículos que corresponden (puedes usar forma
+        clásica o moderna)*/
+        
+        List <Articulo> perifericos;
+        List <Articulo> almacenamiento;
+        List <Articulo> monitores;
+        List <Articulo> impresoras;
+        
+        perifericos = articulos.values().stream()
+                .filter(a -> a.getIdArticulo().startsWith("1"))
+                .collect(Collectors.toList());
+                
+        almacenamiento = articulos.values().stream()
+                .filter(a -> a.getIdArticulo().startsWith("2"))
+                .collect(Collectors.toList());
+                
+        monitores = articulos.values().stream()
+                .filter(a -> a.getIdArticulo().startsWith("3"))
+                .collect(Collectors.toList());
+                
+        impresoras = articulos.values().stream()
+                .filter(a -> a.getIdArticulo().startsWith("4"))
+                .collect(Collectors.toList());
+                
+        
+        
+        System.out.println("\n\n==========Ej 5.==========");
+        //Borrado de colecciones
+        articulos.values().removeIf(a -> a.getIdArticulo().startsWith("4"));
+        System.out.println(articulos);
+        //Borrar todos los valores que su id comiencen en 4 (las de sección de impresoras)
+        
+        
+         System.out.println("\n\n==========Ej 5.==========");
+         List <Pedido> pedidosAntiguos = new List();
+         pedidos.removeAll(pedidos);
+         
+         
+    }
+//</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="CARGA DATOS">
+    public void cargaDatos(){
+        clientes.put("80580845T", new Cliente("80580845T", "ANA ", "658111111", "ana@gmail.com"));
+        clientes.put("36347775R", new Cliente("36347775R", "LOLA", "649222222", "lola@gmail.com"));
+        clientes.put("63921307Y", new Cliente("63921307Y", "JUAN", "652333333", "juan@gmail.com"));
+        clientes.put("02337565Y", new Cliente("02337565Y", "EDU", "634567890", "edu@gmail.com"));
+
+        articulos.put("1-11", new Articulo("1-11", "RATON LOGITECH ST ", 0, 15));
+        articulos.put("1-22", new Articulo("1-22", "TECLADO STANDARD  ", 5, 18));
+        articulos.put("2-11", new Articulo("2-11", "HDD SEAGATE 1 TB  ", 15, 80));
+        articulos.put("2-22", new Articulo("2-22", "SSD KINGSTOM 256GB", 9, 70));
+        articulos.put("2-33", new Articulo("2-33", "SSD KINGSTOM 512GB", 0, 200));
+        articulos.put("3-11", new Articulo("3-11", "HP LASERJET HP800 ", 2, 200));
+        articulos.put("3-22", new Articulo("3-22", "EPSON PRINT XP300 ", 5, 80));
+        articulos.put("4-11", new Articulo("4-11", "ASUS  MONITOR  22 ", 5, 100));
+        articulos.put("4-22", new Articulo("4-22", "HP MONITOR LED 28 ", 5, 180));
+        articulos.put("4-33", new Articulo("4-33", "SAMSUNG ODISSEY G5", 12, 580));
+
+        LocalDate hoy = LocalDate.now();
+        pedidos.add(new Pedido("80580845T-001/2025", clientes.get("80580845T"), hoy.minusDays(1), new ArrayList<>(List.of(new LineaPedido(articulos.get("1-11"), 3), new LineaPedido(articulos.get("4-22"), 3)))));
+        pedidos.add(new Pedido("80580845T-002/2025", clientes.get("80580845T"), hoy.minusDays(2), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-11"), 3), new LineaPedido(articulos.get("4-22"), 2), new LineaPedido(articulos.get("4-33"), 4)))));
+        pedidos.add(new Pedido("36347775R-001/2025", clientes.get("36347775R"), hoy.minusDays(3), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-22"), 1), new LineaPedido(articulos.get("2-22"), 3)))));
+        pedidos.add(new Pedido("36347775R-002/2025", clientes.get("36347775R"), hoy.minusDays(5), new ArrayList<>(List.of(new LineaPedido(articulos.get("4-33"), 3), new LineaPedido(articulos.get("2-11"), 3)))));
+        pedidos.add(new Pedido("63921307Y-001/2025", clientes.get("63921307Y"), hoy.minusDays(4), new ArrayList<>(List.of(new LineaPedido(articulos.get("2-11"), 5), new LineaPedido(articulos.get("2-33"), 3), new LineaPedido(articulos.get("4-33"), 2)))));
     }
 //</editor-fold>
 }
