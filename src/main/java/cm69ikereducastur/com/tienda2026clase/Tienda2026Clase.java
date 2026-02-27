@@ -4,6 +4,9 @@
 
 package cm69ikereducastur.com.tienda2026clase;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -67,9 +70,15 @@ public class Tienda2026Clase {
         //t2026.cinco1();
 //</editor-fold>
         
+
+
+//<editor-fold defaultstate="collapsed" desc="Archivos">
+    //t2026.guardaClientes();
+    t2026.guardaPedidos();
+//</editor-fold>
         //t2026.listadoStreams();
         //t2026.repasoStreams2();
-        t2026.colecciones();
+        //t2026.colecciones();
         
     }
     
@@ -498,7 +507,7 @@ private void listadoPedido(){
    /* private double totalPedido(int totalPedido){
         for (Pedido p : pedidos) {
             int total = 0;
-            for (LineaPedido pl : p.getCestaCompra()) {
+            for (LineaPedido lp : p.getCestaCompra()) {
                 if () {
                     
                 }
@@ -946,13 +955,45 @@ private void listadoPedido(){
         
         
          System.out.println("\n\n==========Ej 5.==========");
-         List <Pedido> pedidosAntiguos = new List();
-         pedidos.removeAll(pedidos);
-         
-         
+         List <Pedido> pedidosAntiguos = pedidos.stream()
+                 .filter(p -> p.getFechaPedido().isBefore(LocalDate.now().minusDays(3)))
+                 .collect(Collectors.toList()); //saco los elementos que me quiero cargar, y los llevo a otra colección
+         pedidos.removeAll(pedidosAntiguos); //elimino los elementos
     }
 //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="ARCHIVOS EN JAVA">
+    //CLASE FILE
+    public void guardaClientes(){
+        
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Clientes.txt",true))) {
+            for (Cliente c : clientes.values()) {
+                bw.write(c.toString());
+                //bw.write(c.getIDcliente() + " - " + c.getNombre() + " - " + c.getTelefono() + " - " + c.getEmail()); LO MISMO
+                bw.newLine(); //Para saltar de línea, porque sino salen todos los clientes en una misma línea.
+            }
+        } catch (IOException e) {
+            System.out.println("No se ha podido escribir en el fichero");
+        }
+    }
+    
+    public void guardaPedidos(){
+        
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Pedidos.txt",true))) {
+            for (Pedido p : pedidos) {
+                bw.write(p.toString());
+                for (LineaPedido lp : p.getCestaCompra()) {
+                    bw.write(p.getIDpedido() + " - " + p.getClientePedido() + " - " + p.getFechaPedido() + " - " + lp.getArticulo() + " - " + lp.getUnidades());
+                    bw.newLine(); //Para saltar de línea, porque sino salen todos los clientes en una misma línea.
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No se ha podido escribir en el fichero");
+        }
+    }
+    
+    
+//</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="CARGA DATOS">
     public void cargaDatos(){
