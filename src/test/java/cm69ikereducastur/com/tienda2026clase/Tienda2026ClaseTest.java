@@ -58,6 +58,9 @@ public class Tienda2026ClaseTest {
     /**
      * Añadimos un getter a los HashMaps articulos y clientes, porque sino, no nos dejará añadir 
      * datos como prueba de su funcionalidad (como pasa con el ArrayList pedidos).
+     * 
+     * En AssertEquals ponemos el dato que damos, y de seguido el resultado esperado.
+     * Es decir: assertEquals(dato que damos, dato esperado).
      */
     public void testCargaDatos() {
         assertAll (
@@ -84,4 +87,16 @@ public class Tienda2026ClaseTest {
                 () -> assertEquals(0,t.totalCliente(t.getClientes().get("02337565Y")))
         );
     }
+    
+    /**
+     * 
+     */
+    public void Teststock(){
+        assertThrows(StockCero.class, () -> {t.stock(t.getArticulos().get("1-11"),5);});
+        assertThrows(StockCero.class, () -> {t.stock(t.getArticulos().get("2-33"),5);});
+        assertThrows(StockInsuficiente.class, () -> {t.stock(t.getArticulos().get("3-11"),5);});
+        assertThrows(StockInsuficiente.class, () -> {t.stock(t.getArticulos().get("3-22"),10);});
+    }
+    
+    
 }

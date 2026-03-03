@@ -287,7 +287,7 @@ private void listadoPedido(){
         return nuevoId;
     }
     
-    private void stock (Articulo a, int unidades) throws StockCero, StockInsuficiente {
+    public void stock (Articulo a, int unidades) throws StockCero, StockInsuficiente {
         if (a.getExistencias() == 0){
             throw new StockCero("0 unidades disponibles de: " 
                     + a.getDescripcion());
