@@ -89,7 +89,10 @@ public class Tienda2026ClaseTest {
     }
     
     /**
-     * 
+     * Último Assert que se da. Se usa para probar si java lanza las excepciones dadas.
+     * Hay que tener cuidado con su sintaxis, que es algo compleja. Hay una llave al inicio del
+     * t.stock y no acaba hasta el final. Por lo que, debemos poner dos ";": uno detrás de la llave y otro
+     * al final.
      */
     public void Teststock(){
         assertThrows(StockCero.class, () -> {t.stock(t.getArticulos().get("1-11"),5);});
@@ -97,6 +100,4 @@ public class Tienda2026ClaseTest {
         assertThrows(StockInsuficiente.class, () -> {t.stock(t.getArticulos().get("3-11"),5);});
         assertThrows(StockInsuficiente.class, () -> {t.stock(t.getArticulos().get("3-22"),10);});
     }
-    
-    
 }

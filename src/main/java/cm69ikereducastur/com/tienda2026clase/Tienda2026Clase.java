@@ -965,7 +965,6 @@ private void listadoPedido(){
     //<editor-fold defaultstate="collapsed" desc="ARCHIVOS EN JAVA">
     //CLASE FILE
     public void guardaClientes(){
-        
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Clientes.txt",true))) {
             for (Cliente c : clientes.values()) {
                 bw.write(c.toString());
@@ -978,7 +977,6 @@ private void listadoPedido(){
     }
     
     public void guardaPedidos(){
-        
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Pedidos.txt",true))) {
             for (Pedido p : pedidos) {
                 bw.write(p.toString());
@@ -991,6 +989,35 @@ private void listadoPedido(){
             System.out.println("No se ha podido escribir en el fichero");
         }
     }
+    
+    public void SeccionPor(){
+        try (BufferedWriter bwPer = new BufferedWriter(new FileWriter("perifericos.csv"));
+            BufferedWriter bwAlm = new BufferedWriter(new FileWriter("almacenamiento.csv"));
+            BufferedWriter bwImp = new BufferedWriter(new FileWriter("impresores.csv"));
+            BufferedWriter bwMon = new BufferedWriter(new FileWriter("monitores.csv"))) {
+            
+            for (Articulo a : articulos.values()) {
+                switch (a.getIdArticulo().charAt(0)) {
+                    case '1':
+                        bwPer.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        break;
+                    case '2':
+                        bwAlm.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        break;
+                    case '3':
+                        bwImp.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        break;
+                    case '4':
+                        bwMon.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No se ha podido escribir en el fichero");
+        }
+    }
+    
+    
     
     
 //</editor-fold>
