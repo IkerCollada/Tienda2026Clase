@@ -5,6 +5,7 @@
 package cm69ikereducastur.com.tienda2026clase;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -72,10 +73,12 @@ public class Tienda2026Clase {
         
 
 
-//<editor-fold defaultstate="collapsed" desc="Archivos">
+    //<editor-fold defaultstate="collapsed" desc="Archivos">
     //t2026.guardaClientes();
-    t2026.guardaPedidos();
-//</editor-fold>
+    //t2026.guardaPedidos();
+    t2026.guardaArticulosPorSeccion();
+    t2026.leerArticulosPorSeccion();
+    //</editor-fold>
         //t2026.listadoStreams();
         //t2026.repasoStreams2();
         //t2026.colecciones();
@@ -990,7 +993,32 @@ private void listadoPedido(){
         }
     }
     
-    public void SeccionPor(){
+    private void leeClientes(){
+        //SIMPLEMENTE LEER LAS LÍNEAS DEL ARCHIVO clientes.txt Y MOSTRARLAS POR PANTALLA
+        System.out.println("\nListado de Clientes directamente desde clientes.txt\n");
+        try(Scanner scClientes=new Scanner(new File("D:/clientes.txt"))){
+            while (scClientes.hasNextLine()){
+                System.out.println(scClientes.nextLine());                                                              
+            }
+        }catch(IOException e){
+            System.out.println(e.toString());
+        }
+        //CREAR UNA NUEVA COLECCIÓN DE TIPO HASHMAP A PARTIR DEL ARCHIVO clientes.csv
+        HashMap <String,Cliente> clientesAux = new HashMap();
+        try(Scanner scClientes=new Scanner(new File("D:/clientes.csv"))){
+            while (scClientes.hasNextLine()){
+                String [] atributos = scClientes.nextLine().split("[,]");                                                              
+                Cliente c=new Cliente(atributos[0],atributos[1],atributos[2],atributos[3]); 
+                clientesAux.put(atributos[0], c);
+            }
+        }catch(IOException e){
+            System.out.println(e.toString());
+        }
+        System.out.println("\nListado de Clientes del nuevo HashMap clientesAux\n");
+        clientesAux.values().forEach(System.out::println);
+    }
+    
+    public void guardaArticulosPorSeccion(){
         try (BufferedWriter bwPer = new BufferedWriter(new FileWriter("perifericos.csv"));
             BufferedWriter bwAlm = new BufferedWriter(new FileWriter("almacenamiento.csv"));
             BufferedWriter bwImp = new BufferedWriter(new FileWriter("impresores.csv"));
@@ -999,27 +1027,64 @@ private void listadoPedido(){
             for (Articulo a : articulos.values()) {
                 switch (a.getIdArticulo().charAt(0)) {
                     case '1':
-                        bwPer.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        bwPer.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp() + "\n");
                         break;
                     case '2':
-                        bwAlm.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        bwAlm.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp() + "\n");
                         break;
                     case '3':
-                        bwImp.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        bwImp.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp() + "\n");
                         break;
                     case '4':
-                        bwMon.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp());
+                        bwMon.write(a.getIdArticulo() + " - " +  a.getDescripcion() + " - " + a.getExistencias() + " - " + a.getPvp() + "\n");
                         break;
                 }
             }
+            System.out.println("Archivo creados correctamente");
         } catch (IOException e) {
-            System.out.println("No se ha podido escribir en el fichero");
+            System.out.println("No se han podido crear los archivos");
+            File f = new File("D:/perifericos.csv");
+            f.delete();
+            f = new File("D:/almacenamiento.csv");
+            f.delete();
+            f = new File("D:/impresoras.csv");
+            f.delete();
+            f = new File("D:/monitores.csv");
+            f.delete();
         }
     }
     
-    
-    
-    
+    public void leerArticulosPorSeccion(){
+        //SIMPLEMENTE LEER LAS LÍNEAS DEL ARCHIVO clientes.txt Y MOSTRARLAS POR PANTALLA
+        System.out.println("\nListado de artículos por sección\n");
+        try(Scanner scPer = new Scanner(new File("perifericos.csv"));
+           Scanner scAlm = new Scanner(new File("almacenamiento.csv"));
+           Scanner scImp = new Scanner(new File("impresores.csv"));
+           Scanner scMon = new Scanner(new File("monitores.csv"))){
+            
+            System.out.println("\n\nSECCION PERIFERICOS");
+            while (scPer.hasNextLine()){
+                System.out.println(scPer.nextLine());                                                
+            }
+            
+            System.out.println("\n\nSECCION ALMACENAMIENTO");
+            while (scAlm.hasNextLine()){
+                System.out.println(scAlm.nextLine());                                       
+            }
+            
+            System.out.println("\n\nSECCION IMPRESORES");
+            while (scImp.hasNextLine()){
+                System.out.println(scImp.nextLine());                                                        
+            }
+            
+            System.out.println("\n\nSECCION MONITORES");
+            while (scMon.hasNextLine()){
+                System.out.println(scMon.nextLine());                                                              
+            }
+        }catch(IOException e){
+            System.out.println(e.toString());
+        }
+    }
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="CARGA DATOS">
