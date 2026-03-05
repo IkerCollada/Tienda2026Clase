@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,9 +24,9 @@ import java.util.stream.Collectors;
  *
  * @author 1dawd23
  */
-public class Tienda2026Clase {
+public class Tienda2026Clase implements Serializable {
     
-    private Scanner sc = new Scanner(System.in);
+    private static final transient Scanner sc = new Scanner(System.in); //transient para evitar el serializable
     private ArrayList <Pedido> pedidos;
     private HashMap <String, Articulo> articulos;
     private HashMap <String, Cliente> clientes;
@@ -53,9 +54,10 @@ public class Tienda2026Clase {
     }
     
     public static void main(String[] args) {
-        Tienda2026Clase t2026=new Tienda2026Clase();
+        Tienda2026Clase t2026 = new Tienda2026Clase();
         t2026.cargaDatos();
         //t2026.menu();
+        
         //<editor-fold defaultstate="collapsed" desc="Examen tienda">
         //t2026.uno();
         //t2026.dos();
@@ -71,18 +73,12 @@ public class Tienda2026Clase {
         //t2026.cinco1();
 //</editor-fold>
         
-
-
-    //<editor-fold defaultstate="collapsed" desc="Archivos">
+        //<editor-fold defaultstate="collapsed" desc="Archivos">
     //t2026.guardaClientes();
     //t2026.guardaPedidos();
     t2026.guardaArticulosPorSeccion();
     t2026.leerArticulosPorSeccion();
     //</editor-fold>
-        //t2026.listadoStreams();
-        //t2026.repasoStreams2();
-        //t2026.colecciones();
-        
     }
     
     //<editor-fold defaultstate="collapsed" desc="MENUES">
@@ -659,6 +655,7 @@ private void listadoPedido(){
     //</editor-fold>
     
     
+    
     //<editor-fold defaultstate="collapsed" desc="STREAMS">
     public double totalCliente(Cliente c){
         return pedidos.stream().filter(p-> p.getClientePedido().equals(c))
@@ -800,7 +797,6 @@ private void listadoPedido(){
     }
 //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="EXAMEN STREAMS">
     private void uno1(){
         //clientes.values().stream().sorted(Comparator.comparing(Cliente :: ));
@@ -882,6 +878,8 @@ private void listadoPedido(){
         
     }
 //</editor-fold>
+    
+    
     
     //<editor-fold defaultstate="collapsed" desc="COLECCIONES">
     public void colecciones(){
@@ -1084,6 +1082,27 @@ private void listadoPedido(){
         }catch(IOException e){
             System.out.println(e.toString());
         }
+        
+        //CREAR UNA NUEVA COLECCIÓN DE TIPO HASHMAP A PARTIR DEL ARCHIVO clientes.csv
+        HashMap <String, Articulo> articulosAux = new HashMap();
+        try(Scanner scPer = new Scanner(new File("Perifericos.csv"));
+            Scanner scAlm = new Scanner(new File("almacenamiento.csv"));
+            Scanner scImp = new Scanner(new File("impresores.csv"));
+            Scanner scMon = new Scanner(new File("monitores.csv"))){
+            
+            
+            System.out.println("\n\nPERIFERICOS");
+            while (scPer.hasNextLine()){
+                lineaArchivo = scPer.nextLine();
+                atributos = lineaArchivo.split("[,]");
+                articulosAux.put(atributos[0]),
+                    new Articulo(atributos[0], atributos[1], Integer.parseInt(atributos[2]), Double.parseDouble(atributos[3]));
+                    System.out.println(lineaArchivo);
+            }
+        }catch(IOException e){
+            System.out.println(e.toString());
+        }
+        
     }
 //</editor-fold>
     

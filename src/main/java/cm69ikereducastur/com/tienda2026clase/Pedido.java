@@ -4,6 +4,7 @@
  */
 package cm69ikereducastur.com.tienda2026clase;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author 1dawd23
  */
-public class Pedido {
+public class Pedido implements Serializable{
     private String idPedido;
     private Cliente clientePedido;
     private LocalDate fechaPedido;
