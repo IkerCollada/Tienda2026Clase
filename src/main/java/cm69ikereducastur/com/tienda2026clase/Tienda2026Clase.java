@@ -5,9 +5,15 @@
 package cm69ikereducastur.com.tienda2026clase;
 
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +44,7 @@ public class Tienda2026Clase implements Serializable {
     }
 
 /**
- * getter para los ArrayList Pedidos, Articulos y Clientes, ya que sin un getter no podemos 
+ * getter para los ArrayList Pedidos, Articulos y Clientes, ya que sin un getter no podemos
  * testear métodos de la clase Tienda2026.
  */
     public ArrayList <Pedido> getPedidos() {
@@ -54,31 +60,41 @@ public class Tienda2026Clase implements Serializable {
     }
     
     public static void main(String[] args) {
-        Tienda2026Clase t2026 = new Tienda2026Clase();
-        t2026.cargaDatos();
-        //t2026.menu();
+        Tienda2026Clase t = new Tienda2026Clase();
+        
+        t.cargaDatos();
+        t.exportarSecciones();
+        /* Primero se llama al método cargaDatos, luego si queremos importar,
+        tenemos que hacer un segundo run File comentando cargaDatos y descomentando el importarDatos */
+        //t.menu();
         
         //<editor-fold defaultstate="collapsed" desc="Examen tienda">
-        //t2026.uno();
-        //t2026.dos();
-        //t2026.tres();
-        //t2026.cuatro();
-        //t2026.cinco();
+        //t.uno();
+        //t.dos();
+        //t.tres();
+        //t.cuatro();
+        //t.cinco();
         
         //Examen con Streams:
-        //t2026.uno1();
-        //t2026.dos1();
-        //t2026.tres1();
-        //t2026.cuatro1();
-        //t2026.cinco1();
+        //t.uno1();
+        //t.dos1();
+        //t.tres1();
+        //t.cuatro1();
+        //t.cinco1();
 //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Archivos">
-    //t2026.guardaClientes();
-    //t2026.guardaPedidos();
-    t2026.guardaArticulosPorSeccion();
-    t2026.leerArticulosPorSeccion();
-    //</editor-fold>
+        //t2026.guardaClientes();
+        //t2026.guardaPedidos();
+        //t.guardaArticulosPorSeccion();
+        //t.leerArticulosPorSeccion();
+        //t.leeClientes();
+        
+    
+        //SERIALIZACIÓN
+        //t.exportarColecciones();
+        //t.importarColecciones();
+        //</editor-fold>
     }
     
     //<editor-fold defaultstate="collapsed" desc="MENUES">
@@ -663,9 +679,6 @@ private void listadoPedido(){
     }
     
     private void listadoStreams(){
-        
-        
-        
         System.out.println("ARTICULOS DE MENOS DE 100 EUROS POR PRECIO DE - A");
         articulos.values().stream()
                 .filter(a->a.getPvp()<100)
@@ -964,9 +977,8 @@ private void listadoPedido(){
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="ARCHIVOS EN JAVA">
-    //CLASE FILE
     public void guardaClientes(){
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Clientes.txt",true))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Clientes.txt", true))) {
             for (Cliente c : clientes.values()) {
                 bw.write(c.toString());
                 //bw.write(c.getIDcliente() + " - " + c.getNombre() + " - " + c.getTelefono() + " - " + c.getEmail()); LO MISMO
@@ -994,7 +1006,7 @@ private void listadoPedido(){
     private void leeClientes(){
         //SIMPLEMENTE LEER LAS LÍNEAS DEL ARCHIVO clientes.txt Y MOSTRARLAS POR PANTALLA
         System.out.println("\nListado de Clientes directamente desde clientes.txt\n");
-        try(Scanner scClientes=new Scanner(new File("D:/clientes.txt"))){
+        try(Scanner scClientes = new Scanner(new File("D:/clientes.txt"))){
             while (scClientes.hasNextLine()){
                 System.out.println(scClientes.nextLine());                                                              
             }
@@ -1003,7 +1015,7 @@ private void listadoPedido(){
         }
         //CREAR UNA NUEVA COLECCIÓN DE TIPO HASHMAP A PARTIR DEL ARCHIVO clientes.csv
         HashMap <String,Cliente> clientesAux = new HashMap();
-        try(Scanner scClientes=new Scanner(new File("D:/clientes.csv"))){
+        try(Scanner scClientes = new Scanner(new File("D:/clientes.csv"))){
             while (scClientes.hasNextLine()){
                 String [] atributos = scClientes.nextLine().split("[,]");                                                              
                 Cliente c=new Cliente(atributos[0],atributos[1],atributos[2],atributos[3]); 
@@ -1092,16 +1104,225 @@ private void listadoPedido(){
             
             
             System.out.println("\n\nPERIFERICOS");
-            while (scPer.hasNextLine()){
-                lineaArchivo = scPer.nextLine();
+            while (scPer.hasNextLine()){ //En este while está el error.
+                /*lineaArchivo = scPer.nextLine();
                 atributos = lineaArchivo.split("[,]");
                 articulosAux.put(atributos[0]),
                     new Articulo(atributos[0], atributos[1], Integer.parseInt(atributos[2]), Double.parseDouble(atributos[3]));
-                    System.out.println(lineaArchivo);
+                    System.out.println(lineaArchivo);*/
+                    
+                    
+                    
+                    
             }
         }catch(IOException e){
             System.out.println(e.toString());
         }
+        
+    }
+    
+    
+    //SERIALIZACIÓN
+    
+    /**
+     * Serializa los objetos de la tienda.
+     * ObjectOutPutStream es la base que sabe serializar los objetos.
+     * Los "for each" es para cada objeto. Y dentro de ellas el writeObject escribe el archivo
+     */
+    public void exportarColecciones() {
+        try (ObjectOutputStream oosArticulos = new ObjectOutputStream(new FileOutputStream("D:/articulos.dat"));
+            ObjectOutputStream oosClientes = new ObjectOutputStream(new FileOutputStream("D:/clientes.dat"));
+            ObjectOutputStream oosPedidos = new ObjectOutputStream (new FileOutputStream("D:/pedidos.dat"))) {
+	   	   
+            for (Articulo a : articulos.values()) {
+                oosArticulos.writeObject(a);
+            }
+            for (Cliente c : clientes.values()) {
+                oosClientes.writeObject(c);
+            }
+            for (Pedido p : pedidos){
+                 oosPedidos.writeObject(p);
+            }
+            System.out.println("Copia de seguridad realizada con éxito.");
+	    
+        } catch (IOException ex) {
+            System.out.println("No se han podido crear los archivos correctamente, "
+                    + "revise unidades de almacenamiento e inténtelo de nuevo");
+            File f = new File("D:/articulos.dat");
+            f.delete();
+            
+            f = new File("D:/clientes.dat");
+            f.delete();
+            
+            f = new File("D:/pedidos.dat");
+            f.delete();
+        } 
+    }  
+    
+    public void importarColecciones() {
+        /* HAY QUE LEER DESDE CADA ARCHIVO POR SEPARADO PORQUE SI INTENTAMOS METERLO TODO EN EL MISMO
+        TRY-CATCH AL LLEGAR AL FINAL DEL PRIMER ARCHIVO SE PRODUCE LA EOFException Y SÓLO SE 
+        LEERÍA BIEN EL PRIMER ARCHIVO, EL RESTO NO */
+        
+        try (ObjectInputStream oisArticulos = new ObjectInputStream(new FileInputStream("D:/articulos.dat"))){
+            Articulo a;
+            while ((a = (Articulo)oisArticulos.readObject()) != null){ //Mientras al leer el objeto Articulo no sea nulo, imprime
+                 articulos.put(a.getIdArticulo(), a);
+            } 
+        } catch (FileNotFoundException e) { //Los catchs nos lo va colocando el IDE. No tenemos de qué preocuparnos
+                 System.out.println(e.toString());   
+                 
+        } catch (EOFException e){
+                System.out.println("Finalizada la lectura del archivo articulos.dat");
+                
+        } catch (ClassNotFoundException | IOException e) {
+                System.out.println(e.toString()); 
+        } 
+     
+        
+        try (ObjectInputStream oisClientes = new ObjectInputStream(new FileInputStream("D:/clientes.dat"))){
+            Cliente c;
+            while ( (c =(Cliente)oisClientes.readObject()) != null){
+                 clientes.put(c.getIDcliente(), c);
+            } 
+	} catch (FileNotFoundException e) {
+                 System.out.println(e.toString());   
+                 
+        } catch (EOFException e){
+                System.out.println("Finalizada la lectura del archivo clientes.dat");
+                
+        } catch (ClassNotFoundException | IOException e) {
+                System.out.println(e.toString()); 
+        }
+        
+        
+        try (ObjectInputStream oisPedidos = new ObjectInputStream(new FileInputStream("D:/pedidos.dat"))){
+            Pedido p;
+            while ((p =(Pedido)oisPedidos.readObject()) != null){
+                 pedidos.add(p);
+            } 
+	} catch (FileNotFoundException e) {
+                 System.out.println(e.toString());
+                 
+        } catch (EOFException e){
+                 System.out.println("Finalizada la lectura del archivo pedidos.dat");
+                 
+        } catch (ClassNotFoundException | IOException e) {
+                System.out.println(e.toString()); 
+        }
+    }
+    
+    
+    //Programa que al teclear una sección, guarde los articulos de esa sección en binario.
+    //Luego se vayan leyendo y los muestre por pantalla.
+    public void exportarSecciones(){
+        List <Articulo> perifericos = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("1")) {
+                perifericos.add(a);
+            }
+        }
+        
+        List <Articulo> almacenamiento = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("2")) {
+                almacenamiento.add(a);
+            }
+        }
+        
+        List <Articulo> impresores = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("3")) {
+                impresores.add(a);
+            }
+        }
+        
+        List <Articulo> monitores = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("4")) {
+                monitores.add(a);
+            }
+        }
+        
+        try (ObjectOutputStream oosPer = new ObjectOutputStream(new FileOutputStream("D:/Perifericos.dat"));
+             ObjectOutputStream oosAlm = new ObjectOutputStream(new FileOutputStream("D:/Almacenamiento.dat"));
+             ObjectOutputStream oosImp = new ObjectOutputStream(new FileOutputStream("D:/Impresores.dat"));
+             ObjectOutputStream oosMon = new ObjectOutputStream(new FileOutputStream("D:/Monitores.dat"))) {
+            
+            for (Articulo per : perifericos) {
+                oosPer.writeObject(per);
+            }
+            
+            for (Articulo alm : almacenamiento) {
+                oosAlm.writeObject(alm);
+            }
+            
+            for (Articulo imp : impresores) {
+                oosImp.writeObject(imp);
+            }
+            
+            for (Articulo mon : monitores) {
+                oosMon.writeObject(mon);
+            }
+            
+        } catch (IOException e) {
+            e.getMessage();
+        }
+    }
+    
+    public void lecturaSecciones(){
+        List <Articulo> perifericos = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("1")) {
+                perifericos.add(a);
+            }
+        }
+        
+        List <Articulo> almacenamiento = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("2")) {
+                almacenamiento.add(a);
+            }
+        }
+        
+        List <Articulo> impresores = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("3")) {
+                impresores.add(a);
+            }
+        }
+        
+        List <Articulo> monitores = new ArrayList();
+        for (Articulo a : articulos.values()) {
+            if (a.getIdArticulo().startsWith("4")) {
+                monitores.add(a);
+            }
+        }
+        
+        try {
+            int opcion;
+        do {
+            System.out.println("\t\t\t1- PERIFERICOS");
+            System.out.println("\t\t\t2- ALMACENAMIENTO");
+            System.out.println("\t\t\t3- IMPRESORES");
+            System.out.println("\t\t\t4- MONITORES");
+            opcion = sc.nextInt();
+            
+            switch (opcion) {
+                case 1:
+                    
+                    break;
+                case 2:
+                    
+                    break;
+                case 3:
+                    
+                    break;
+            }
+        } while (opcion != 9);
+        } catch (Exception e) {
+        }
+        
         
     }
 //</editor-fold>
@@ -1133,3 +1354,6 @@ private void listadoPedido(){
     }
 //</editor-fold>
 }
+//POSIBLES EJERCICIOS DEL MARTES
+//Separar por clientes con pedidos y clientes sin pedidos
+//Todas las preguntas que haga serán de ir guardando de objeto a objeto tanto en archivo de texto como serializarlo
